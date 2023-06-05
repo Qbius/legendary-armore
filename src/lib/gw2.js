@@ -16,6 +16,22 @@ async function get_endpoint(endpoint, key, method='GET') {
     }
 }
 
+async function get_info_from_api(key) {
+    const res = await fetch(
+        `/api/info`, 
+        {
+            method: 'POST',
+            body: JSON.stringify({key}),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        }
+    );
+    if (res.ok) {
+        return await res.json();
+    }
+}
+
 const ids = {
     wallet: {
         "19": "Airship Part",
@@ -68,11 +84,12 @@ const ids = {
 }
 
 async function get_info(key) {
-    const res = await Promise.all(Object.entries(ids).map(([category, mapped]) => (async () => {
-        const payload = await get_endpoint(`account/${category}`, key);
+    const all_payloads = await get_info_from_api(key);
+    const res = await Promise.all(Object.entries(ids).map(([category, mapped]) => (async (aps) => {
+        const payload = aps[category];
         const counts = Object.fromEntries(payload.filter(o => o?.id && o.id in mapped).map(o => [mapped[o.id], o.count ?? o.value]));
         return [category, Object.fromEntries(Object.values(mapped).map(name => [name, counts[name] ?? 0]))];
-    })()));
+    })(all_payloads)));
     return Object.fromEntries(res);
 }
 
