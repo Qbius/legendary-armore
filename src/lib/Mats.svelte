@@ -1,6 +1,6 @@
 <script>
     import {Popover, Spinner} from "sveltestrap";
-    import {calc} from "./gw2";
+    import {calc, sum_values} from "./gw2";
 
     export let api_key;
 </script>
@@ -9,7 +9,7 @@
     <Spinner color="black"/>
 {:then {pieces, individual}}
     <div class="component">
-        {#each Object.entries(individual) as [name, {base, per, extra, count}]}
+        {#each Object.entries(individual) as [name, {base, per, extra, extraone, count}]}
             <div style="display: flex; gap: 10px; height: 36px; padding: 2px;" class={(count >= 6) ? 'success' : (count < 1) ? 'failure' : ''}>
                 <a style="width: 160px; display: flex; justify-content: flex-end; align-items: center; height: 30px;" href="https://wiki.guildwars2.com/wiki/{name.replaceAll(' ', '_')}" target=”_blank”><span>{name}</span></a>
                 <Popover trigger="hover" target="{name.replaceAll(' ', '_')}-icons">
@@ -29,8 +29,8 @@
                             <img src="/icons/{name.replaceAll(' ', '_')}.png" style="width: 30px; height: 30px; object-fit: cover;" alt="">
                             <span>{base}x <b>{name}</b></span>
                         </div>
-                        <span><b>{(pieces >= 6 || Object.values(extra).some(e => e > 0)) ? 0 : Math.max(per - base, 0)}</b> missing for next piece</span>
-                        <span><b>{Math.max((6 - pieces) * per - (Object.values(extra).reduce((a, b) => a + b) * per + base), 0)}</b> missing for all pieces</span>
+                        <span><b>{(pieces >= 6 || Object.values(extra).some(e => e > 0)) ? 0 : Math.max(per - base - sum_values(extraone), 0)}</b> missing for next piece</span>
+                        <span><b>{Math.max((6 - pieces) * per - (sum_values(extra) * per + base + sum_values(extraone)), 0)}</b> missing for all pieces</span>
                     </div>
                 </Popover>
                 <div id="{name.replaceAll(' ', '_')}-icons" style="width: 190px; display: flex; gap: 2px;" class="hoverable">

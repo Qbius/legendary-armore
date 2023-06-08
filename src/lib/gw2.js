@@ -52,6 +52,9 @@ const ids = {
         "73137": "Cube of Stabilized Dark Energy",
         "69432": "Pile of Auric Dust",
         "68944": "Auric Sliver",
+        "46744": "Glob of Elder Spirit Residue",
+        "46742": "Lump of Mithrillium",
+        "46745": "Spool of Thick Elonian Cord",
     },
     legendaryarmory: {
         "80111": "Perfected Envoy Gloves",
@@ -93,11 +96,15 @@ async function get_info(key) {
     return Object.fromEntries(res);
 }
 
+export function sum_values(o) {
+    return o ? Object.values(o).reduce((a, b) => a + b) : 0;
+}
+
 export async function calc(key) {
     const {wallet, materials, bank, legendaryarmory} = await get_info(key);
     const pieces = Object.values(legendaryarmory).filter(count => count > 0).length;
     const individual = Object.fromEntries(Object.entries({
-        'Provisioner Token': {base: wallet['Provisional Token'], per: 50, extra: {'Gift of Prosperity': bank['Gift of Prosperity'], 'Gift of Craftsmanship': bank['Gift of Craftsmanship']}},
+        'Provisioner Token': {base: wallet['Provisional Token'], per: 50, extra: {'Gift of Prosperity': bank['Gift of Prosperity'], 'Gift of Craftsmanship': bank['Gift of Craftsmanship']}, extraone: {"Glob of Elder Spirit Residue": materials["Glob of Elder Spirit Residue"], "Lump of Mithrillium": materials["Lump of Mithrillium"], "Spool of Thick Elonian Cord": materials["Spool of Thick Elonian Cord"]}},
         'Mystic Clover': {base: materials['Mystic Clover'], per: 15, extra: {'Gift of Prosperity': bank['Gift of Prosperity']}},
         'Legendary Insight': {base: wallet['Legendary Insight'], per: 25, extra: {'Gift of Prowess': bank['Gift of Prowess']}},
         'Spirit Shard': {base: wallet['Spirit Shard'], per: 50, extra: {'Gift of Prowess': bank['Gift of Prowess'], 'Eldritch Scroll': bank['Eldritch Scroll']}},
@@ -110,6 +117,6 @@ export async function calc(key) {
         'Airship Part': {base: wallet['Airship Part'], per: 250, extra: {'Gift of Dedication': bank['Gift of Dedication'], 'Gift of the Pact': bank['Gift of the Pact']}},
         'Lump of Aurillium': {base: wallet['Lump of Aurillium'], per: 250, extra: {'Gift of Dedication': bank['Gift of Dedication'], 'Gift of the Pact': bank['Gift of the Pact']}},
         'Ley Line Crystal': {base: wallet['Ley Line Crystal'], per: 250, extra: {'Gift of Dedication': bank['Gift of Dedication'], 'Gift of the Pact': bank['Gift of the Pact']}},
-    }).map(([name, {base, per, extra}]) => [name, {base, per, extra, count: base / per + pieces + Object.values(extra).reduce((a, b) => a + b)}]));
+    }).map(([name, {base, per, extra, extraone}]) => [name, {base, per, extra, extraone, count: (base + sum_values(extraone)) / per + pieces + sum_values(extra)}]));
     return {pieces, individual};
 }
