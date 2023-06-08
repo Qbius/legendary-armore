@@ -29,7 +29,7 @@
                             <img src="/icons/{name.replaceAll(' ', '_')}.png" style="width: 30px; height: 30px; object-fit: cover;" alt="">
                             <span>{base}x <b>{name}</b></span>
                         </div>
-                        {#each Object.entries(extraone) as [extra_name, extra_count]}
+                        {#each Object.entries(extraone ?? {}) as [extra_name, extra_count]}
                         {#if extra_count > 0}
                             <div style="display: flex; align-items: center; gap: 3px;">
                                 <img src="/icons/{extra_name.replaceAll(' ', '_')}.png" style="width: 30px; height: 30px; object-fit: cover;" alt="">
