@@ -55,6 +55,7 @@ const ids = {
         "46744": "Glob of Elder Spirit Residue",
         "46742": "Lump of Mithrillium",
         "46745": "Spool of Thick Elonian Cord",
+        "43772": "Charged Quartz Crystal",
     },
     legendaryarmory: {
         "80111": "Perfected Envoy Gloves",
@@ -103,8 +104,9 @@ export function sum_values(o) {
 export async function calc(key) {
     const {wallet, materials, bank, legendaryarmory} = await get_info(key);
     const pieces = Object.values(legendaryarmory).filter(count => count > 0).length;
+    console.log(materials["Glob of Elder Spirit Residue"]);
     const individual = Object.fromEntries(Object.entries({
-        'Provisioner Token': {base: wallet['Provisional Token'], per: 50, extra: {'Gift of Prosperity': bank['Gift of Prosperity'], 'Gift of Craftsmanship': bank['Gift of Craftsmanship']}, extraone: {"Glob of Elder Spirit Residue": materials["Glob of Elder Spirit Residue"], "Lump of Mithrillium": materials["Lump of Mithrillium"], "Spool of Thick Elonian Cord": materials["Spool of Thick Elonian Cord"]}},
+        'Provisioner Token': {base: wallet['Provisional Token'], per: 50, extra: {'Gift of Prosperity': bank['Gift of Prosperity'], 'Gift of Craftsmanship': bank['Gift of Craftsmanship']}, extraone: {"Glob of Elder Spirit Residue": materials["Glob of Elder Spirit Residue"], "Lump of Mithrillium": materials["Lump of Mithrillium"], "Spool of Thick Elonian Cord": materials["Spool of Thick Elonian Cord"], "Charged Quartz Crystal": materials["Charged Quartz Crystal"]}},
         'Mystic Clover': {base: materials['Mystic Clover'], per: 15, extra: {'Gift of Prosperity': bank['Gift of Prosperity']}},
         'Legendary Insight': {base: wallet['Legendary Insight'], per: 25, extra: {'Gift of Prowess': bank['Gift of Prowess']}},
         'Spirit Shard': {base: wallet['Spirit Shard'], per: 50, extra: {'Gift of Prowess': bank['Gift of Prowess'], 'Eldritch Scroll': bank['Eldritch Scroll']}},

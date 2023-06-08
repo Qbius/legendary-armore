@@ -29,6 +29,14 @@
                             <img src="/icons/{name.replaceAll(' ', '_')}.png" style="width: 30px; height: 30px; object-fit: cover;" alt="">
                             <span>{base}x <b>{name}</b></span>
                         </div>
+                        {#each Object.entries(extraone) as [extra_name, extra_count]}
+                        {#if extra_count > 0}
+                            <div style="display: flex; align-items: center; gap: 3px;">
+                                <img src="/icons/{extra_name.replaceAll(' ', '_')}.png" style="width: 30px; height: 30px; object-fit: cover;" alt="">
+                                <span>{extra_count}x <b>{extra_name}</b></span>
+                            </div>
+                        {/if}
+                    {/each}
                         <span><b>{(pieces >= 6 || Object.values(extra).some(e => e > 0)) ? 0 : Math.max(per - base - sum_values(extraone), 0)}</b> missing for next piece</span>
                         <span><b>{Math.max((6 - pieces) * per - (sum_values(extra) * per + base + sum_values(extraone)), 0)}</b> missing for all pieces</span>
                     </div>
